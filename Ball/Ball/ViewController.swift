@@ -11,24 +11,46 @@ import UIKit
 class ViewController: UIViewController
 {
     
-    private var ballView = UIImageView()
+    var ball = UIImageView()
+    var radians = CGFloat()
+    var ballRadious = CGFloat()
+    var forward = true
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        setupUI()
+        Timer.scheduledTimer(timeInterval: 1/10, target: self, selector: #selector(rollBall), userInfo: nil, repeats: true)
     }
     
     private func setupUI()
     {
-        
-        ballView.image = #imageLiteral(resourceName: "ball")
-        ballView.center = view.center
-        
-        self.view.addSubview(ballView)
-        
+        let mainViewSize = self.view.bounds.size
+        ball = UIImageView(image: UIImage(named: "ball.png"))
+        ballRadious = 32.0
+        ball.center = CGPoint(x: ballRadious, y: mainViewSize.height * 0.5)
+        self.view.addSubview(ball)
     }
     
-    
+    @objc private func rollBall()
+    {
+        if (forward)
+        {
+            ball.transform = ball.transform.rotated(by: -1)
+            ball.center.x += 32
+            if ball.center.x >= view.bounds.size.width
+            {
+                forward = false
+            }
+        } else
+        {
+            ball.transform = ball.transform.rotated(by: 1)
+            ball.center.x -= 32
+            if ball.center.x <= 32
+            {
+                forward = true
+            }
+        }
+    }
 }
 
